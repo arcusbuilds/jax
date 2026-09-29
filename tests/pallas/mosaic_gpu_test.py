@@ -7342,12 +7342,13 @@ class PallasCallTCGen05Test(PallasTCGen05Test):
       plgpu.barrier_wait(tma_barrier)
 
       plgpu.commit_tmem()
+      plgpu.tcgen05_commit_arrive(mma_barrier, predicate=False)
       # Don't pass a barrier directly into tcgen05_mma and arrive manually.
       plgpu.tcgen05_mma(acc_tmem,
                         a_smem,
                         b_smem,
                         accumulate=False)
-      plgpu.tcgen05_commit_arrive(mma_barrier)
+      plgpu.tcgen05_commit_arrive(mma_barrier, predicate=True)
       plgpu.barrier_wait(mma_barrier)
       # We don't await the load because acc_tmem is never modified again.
       plgpu.store(
